@@ -1,10 +1,10 @@
 /**
- * Nombre del programa: Sopa de letras 
+ * Nombre del programa: Sopa de letras
  * Descripcion: Crear programa que permita a
- * los usuarios jugar sopa de letras 
+ * los usuarios jugar sopa de letras
  * Autores: Maria Jose Madriz, Jaime Escobar
- * Fecha de creacion: 02/10/2019 
- * Fecha de modificacion: 04/10/2019 
+ * Fecha de creacion: 02/10/2019
+ * Fecha de modificacion: 04/10/2019
  * Modificado por: Maria Jose Madriz, Jaime Escobar
  */
 package sopaproyecto;
@@ -47,9 +47,9 @@ public class RutinasSopa {
     }// fin inicializarJuego
 
     private static void limpiarMatriz() {
-        for (String[] arrayJuego : matrizJuego) {
-            for (int h = 0; h < arrayJuego.length; h++) {
-                arrayJuego[h] = " ";
+        for (int i = 0; i < matrizJuego.length; i++) {
+            for (int h = 0; h < matrizJuego[i].length; h++) {
+                matrizJuego[i][h] = " ";
             }
         }
     }//fin limpiarMatriz
@@ -69,30 +69,41 @@ public class RutinasSopa {
 
     static void insertarPalabra(String pPalabra, int pDireccion, int pOrientacion) {
         String palabra = pPalabra;
-        int columna, fila, posicionRandom = LARGO_JUEGO - palabra.length();
+        int posicionRandom = LARGO_JUEGO - palabra.length();
 
         if (pDireccion == 1) {
             palabra = volverPalabra(pPalabra);
         }
         if (pOrientacion == 0) {
-            fila = numeroRandom(0, LARGO_JUEGO - 1);
-            columna = numeroRandom(0, posicionRandom);
-            while (!verificarEspacioHorizontal(palabra, fila, columna)) {
-                fila = numeroRandom(0, LARGO_JUEGO - 1);
-                columna = numeroRandom(0, LARGO_JUEGO - palabra.length());
-            }
-            insertarHorizontal(palabra, fila, columna);
+
+            verificarInsertarHorizontal(posicionRandom, palabra);
 
         } else {
-            fila = numeroRandom(0, posicionRandom);
-            columna = numeroRandom(0, LARGO_JUEGO - 1);
-            while (!verificarEspacioVertical(palabra, fila, columna)) {
-                fila = numeroRandom(0, posicionRandom);
-                columna = numeroRandom(0, LARGO_JUEGO - 1);
-            }
-            insertarVertical(palabra, fila, columna);
+            verificarInsertarVertical(posicionRandom, palabra);
         }
     }// fin insertarPalabra
+
+    private static void verificarInsertarHorizontal(int pPosicionRandom, String pPalabra) {
+
+        int fila = numeroRandom(0, LARGO_JUEGO - 1);
+        int columna = numeroRandom(0, pPosicionRandom);
+        while (!verificarEspacioHorizontal(pPalabra, fila, columna)) {
+            fila = numeroRandom(0, LARGO_JUEGO - 1);
+            columna = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
+        }
+        insertarHorizontal(pPalabra, fila, columna);
+
+    }
+
+    private static void verificarInsertarVertical(int pPosicionRandom, String pPalabra) {
+        int fila = numeroRandom(0, pPosicionRandom);
+        int columna = numeroRandom(0, LARGO_JUEGO - 1);
+        while (!verificarEspacioVertical(pPalabra, fila, columna)) {
+            fila = numeroRandom(0, pPosicionRandom);
+            columna = numeroRandom(0, LARGO_JUEGO - 1);
+        }
+        insertarVertical(pPalabra, fila, columna); 
+    }
 
     private static boolean verificarEspacioHorizontal(String pPalabra, int pFila,
             int pColumna) {
@@ -239,16 +250,15 @@ public class RutinasSopa {
     static boolean verificarJuegoGanado() {
         return palabrasEncontradasCont == 8;
     }
-    
+
     static void agregarPalabraCorrecta(String pPalabra) {
         palabrasEncontradas[palabrasEncontradasCont] = pPalabra;
         palabrasEncontradasCont++;
     }
-    
+
     /*
      * Herramientas generales
      */
-
     static String verArray(String[] arr) {
         String resultado = "[";
         for (int i = 0; i < arr.length; i++) {

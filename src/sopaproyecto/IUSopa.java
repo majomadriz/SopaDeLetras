@@ -2,10 +2,10 @@
  * Nombre del programa: Sopa de letras 
  * Descripcion: Crear programa que permita a
  * los usuarios jugar sopa de letras 
- * Autores: Maria Jose Madriz, Jaime Escobar
+ * Autores: Maria Jose Madriz, Jaime Escobar, Diego Perez
  * Fecha de creacion: 02/10/2019 
- * Fecha de modificacion: 04/10/2019 
- * Modificado por: Maria Jose Madriz, Jaime Escobar
+ * Fecha de modificacion: 03/12/2019 
+ * Modificado por: Maria Jose Madriz, Jaime Escobar, Diego Perez
  */
 package sopaproyecto;
 
