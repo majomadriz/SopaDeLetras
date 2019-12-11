@@ -106,7 +106,8 @@ public class IUSopa {
             int fila = sc.nextInt() - 1;
             System.out.println("Digite numero de columna");
             int columna = sc.nextInt() - 1;
-            System.out.println("Digite 0 si es horizontal o 1 si es vertical");
+            System.out.println("Digite 0 si es horizontal, 1 si es vertical, 2 "
+                    + "si es diagonal hacia arriba o 3 si es diagonal hacia abajo");
             int orientacion = sc.nextInt();
             System.out.println("Digite 0 si esta normal o 1 si esta invertida");
             int direccion = sc.nextInt();
