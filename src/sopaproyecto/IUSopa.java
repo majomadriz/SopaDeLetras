@@ -1,38 +1,159 @@
 /**
- * Nombre del programa: Sopa de letras 
- * Descripcion: Crear programa que permita a
- * los usuarios jugar sopa de letras 
- * Autores: Maria Jose Madriz, Jaime Escobar, Diego Perez
- * Fecha de creacion: 02/10/2019 
- * Fecha de modificacion: 03/12/2019 
+ * Nombre del programa: Sopa de letras Descripcion: Crear programa que permita a
+ * los usuarios jugar sopa de letras Autores: Maria Jose Madriz, Jaime Escobar,
+ * Diego Perez Fecha de creacion: 02/10/2019 Fecha de modificacion: 03/12/2019
  * Modificado por: Maria Jose Madriz, Jaime Escobar, Diego Perez
  */
 package sopaproyecto;
 
+import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Scanner;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class IUSopa {
 
     public static Scanner sc = new Scanner(System.in);
 
+    public static JFrame frame = new JFrame("Sopa de letras");
+    
+    public static JTextField palabra = new JTextField(12);
+
     public static void main(String[] args) {
-        boolean continuar = true;
-        while (continuar) {
-            mostrarMenu();
-            int opcion = seleccionarOpcion();
-            continuar = ejecutarAccion(opcion);
-        }
-        System.out.println("Juego finalizado. Hasta luego!!");
+        mostrarMenu();
 
     }//Fin del main
 
     //Inicio  mostrar menu
     public static void mostrarMenu() {
-        System.out.println("Digite 1 para Configurar juego");
-        System.out.println("Digite 2 para Inicializar juego");
-        System.out.println("Digite 3 para Jugar");
-        System.out.println("Digite 4 para Salir");
+
+        JPanel panelMenu = new JPanel();
+        panelMenu.setLayout(new BoxLayout(panelMenu, BoxLayout.Y_AXIS));
+
+        JPanel panelMenuOpciones = new JPanel();
+        panelMenuOpciones.setLayout(new BoxLayout(panelMenuOpciones, BoxLayout.Y_AXIS));
+
+        JLabel tituloMenu = new JLabel("MENU");
+        tituloMenu.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        panelMenu.add(tituloMenu);
+
+        JButton configurar = new JButton("Configurar Juego");
+        configurar.addActionListener(menuActionListener);
+        configurar.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        configurar.setActionCommand("configurar_juego");
+
+        JButton inicializar = new JButton("Inicializar Juego");
+        inicializar.addActionListener(menuActionListener);
+        inicializar.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        inicializar.setActionCommand("inicializar_juego");
+
+        JButton jugar = new JButton("Jugar");
+        jugar.addActionListener(menuActionListener);
+        jugar.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        jugar.setActionCommand("jugar");
+
+        JButton salir = new JButton("Salir");
+        salir.addActionListener(menuActionListener);
+        salir.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        salir.setActionCommand("salir");
+
+        panelMenuOpciones.add(configurar);
+        panelMenuOpciones.add(inicializar);
+        panelMenuOpciones.add(jugar);
+        panelMenuOpciones.add(salir);
+        panelMenu.add(panelMenuOpciones);
+
+        frame.setSize(500, 500);
+        frame.setContentPane(panelMenu);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }//Fin mostrar menu
+
+    public static KeyListener keyListener = new KeyListener() {
+        public void keyPressed(KeyEvent keyEvent) {
+            // printIt("Pressed", keyEvent);
+        }
+
+        public void keyReleased(KeyEvent keyEvent) {
+            // printIt("Released", keyEvent);
+        }
+
+        public void keyTyped(KeyEvent keyEvent) {
+            // printIt("Typed", keyEvent);
+        }
+
+        // private void printIt(String title, KeyEvent keyEvent) {
+        // int keyCode = keyEvent.getKeyCode();
+        // String keyText = KeyEvent.getKeyText(keyCode);
+        // System.out.println(title + " : " + keyText + " / " + keyEvent.getKeyChar());
+        // }
+    };
+
+    public static ActionListener menuActionListener = new ActionListener() {
+
+        public void actionPerformed(ActionEvent e) {
+            // Aquí está accesible unaVariable
+            String expression = e.getActionCommand();
+            switch (expression) {
+                case "configurar_juego":
+                    System.out.println("configurar_juego");
+                    configurarJuego();
+                    break;
+                case "inicializar_juego":
+                    System.out.println("inicializar_juego");
+                    incializarJuego();
+                    break;
+                case "jugar":
+                    System.out.println("jugar");
+                    jugar();
+                    break;
+                case "salir":
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("oopss");
+                    break;
+            }
+        }
+    };
+
+    public static ActionListener configActionListener = new ActionListener() {
+
+        public void actionPerformed(ActionEvent e) {
+            // Aquí está accesible unaVariable
+            String expression = e.getActionCommand();
+            switch (expression) {
+                case "agregar_palabra":
+                    System.out.println("agregar_palabra");
+                    String ePalabra = palabra.getText();
+                    if (ePalabra.length() > 12 || ePalabra.length() < 3) {
+                        System.out.println(
+                                "La palabra no puede tener mas de 12 letras ni menos de 2");
+                    } else {
+                        palabra.setText("");
+                        palabra.requestFocus();
+                        if(RutinasSopa.insertarPalabraConfig(ePalabra)){
+                            mostrarMenu();
+                        }
+                    }
+                    break;
+                default:
+                    System.out.println("oopss");
+                    break;
+            }
+        }
+    };
 
     //Inicio seleccoinar opcion
     public static int seleccionarOpcion() {
@@ -43,51 +164,35 @@ public class IUSopa {
 
     }//Fin seleccionar opcion
 
-    //Inicio ejecutar accion
-    public static boolean ejecutarAccion(int pOpcion) {
-        boolean continuar = true;
-
-        switch (pOpcion) {
-            case 1:
-                configurarJuego();
-                break;
-
-            case 2:
-                incializarJuego();
-                break;
-
-            case 3:
-                jugar();
-                break;
-
-            case 4:
-                continuar = false;
-                break;
-
-            default:
-                System.out.println("Opcion invalida");
-                break;
-        }
-        return continuar;
-
-    }//Fin ejecutar accion
-
     public static void configurarJuego() {
-        String[] palabrasInit = RutinasSopa.obtenerPalabrasConfig();
-        int i = 0;
-        while (i < palabrasInit.length) {
-            System.out.println("Ingrese una palabra");
-            String palabra = sc.next();
-            if (palabra.length() > 12) {
-                System.out.println(
-                        "La palabra no puede tener mas de 12 letras");
-                continue;
-            } else {
-                RutinasSopa.insertarPalabraConfig(i, palabra);
-                i++;
-            }
-        }
-        System.out.println("Juego Configurado");
+
+        JPanel panelConfig = new JPanel();
+        panelConfig.setLayout(new BoxLayout(panelConfig, BoxLayout.Y_AXIS));
+
+        JLabel tituloMenu = new JLabel("Agregue una palabra:");
+        tituloMenu.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
+        JPanel palabraPanel = new JPanel();
+        palabraPanel.setLayout(new FlowLayout()); 
+    
+        palabra.setHorizontalAlignment(JTextField.LEFT);
+        palabra.addKeyListener(keyListener);
+
+        JButton agregarBtn = new JButton("Agregar Palabra");
+        agregarBtn.addActionListener(configActionListener);
+        agregarBtn.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        agregarBtn.setActionCommand("agregar_palabra");
+        
+        palabraPanel.add(palabra);
+        palabraPanel.add(agregarBtn);
+
+        panelConfig.add(tituloMenu);
+        panelConfig.add(palabraPanel);
+
+        frame.setSize(500, 200);
+        frame.setContentPane(panelConfig);
+        
+        RutinasSopa.resetPalabraConfigIndex();
     }//Fin configurarJuego
 
     public static void incializarJuego() {
@@ -127,7 +232,7 @@ public class IUSopa {
                     System.out.println("La palabra es correcta");
                     RutinasSopa.agregarPalabraCorrecta(palabra);
                     jugar = !RutinasSopa.verificarJuegoGanado();
-                    
+
                     break;
 
                 default:

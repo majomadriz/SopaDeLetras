@@ -1,11 +1,8 @@
 /**
- * Nombre del programa: Sopa de letras
- * Descripcion: Crear programa que permita a
- * los usuarios jugar sopa de letras
- * Autores: Maria Jose Madriz, Jaime Escobar
- * Fecha de creacion: 02/10/2019
- * Fecha de modificacion: 04/10/2019
- * Modificado por: Maria Jose Madriz, Jaime Escobar
+ * Nombre del programa: Sopa de letras Descripcion: Crear programa que permita a
+ * los usuarios jugar sopa de letras Autores: Maria Jose Madriz, Jaime Escobar
+ * Fecha de creacion: 02/10/2019 Fecha de modificacion: 04/10/2019 Modificado
+ * por: Maria Jose Madriz, Jaime Escobar
  */
 package sopaproyecto;
 
@@ -15,9 +12,10 @@ public class RutinasSopa {
     private static final int LARGO_PALABRAS_JUEGO = 8;
     private static final int PALABRAS_JUEGO_MAX = 20;
     private static int palabrasEncontradasCont = 0;
+    private static int palabraConfigIndex = 0;
     private static char[] alphabet = "abcdefghijklmnñopqrstuvwxyz".toCharArray();
     private static String[] palabrasConfig = {"agua", "bueno", "cielo", "dedo",
-        "escalera", "gato", "invierno", "jamon", "kiosco", "mano", "pato",
+        "escalera", "gato", "invierno9012", "jamon", "kiosco", "mano", "pato",
         "oreja", "palo", "queso", "sol", "tarde", "uno", "verano", "xilófono",
         "zapato"};
 
@@ -30,8 +28,14 @@ public class RutinasSopa {
         return palabrasConfig;
     }// fin obtenerPalabrasConfig
 
-    public static void insertarPalabraConfig(int pIndex, String pPalabra) {
-        palabrasConfig[pIndex] = pPalabra;
+    public static boolean insertarPalabraConfig(String pPalabra) {
+        palabrasConfig[palabraConfigIndex] = pPalabra;
+        palabraConfigIndex++;
+        return palabraConfigIndex == palabrasConfig.length;
+    }// fin insertarPalabraConfig
+
+    public static void resetPalabraConfigIndex() {
+        palabraConfigIndex = 0;
     }// fin insertarPalabraConfig
 
     public static void inicializarJuego() {
@@ -39,8 +43,13 @@ public class RutinasSopa {
         seleccionarPalabras();
         limpiarMatriz();
         for (int i = 0; i < palabrasSelec.length; i++) {
-            insertarPalabra(palabrasSelec[i], numeroRandom(0, 1),
-                    numeroRandom(0, 3));
+            boolean insert = true;
+            while (insert) {
+                insert = insertarPalabra(palabrasSelec[i], numeroRandom(0, 1),
+                        numeroRandom(0, 3));
+            }
+
+            System.out.println(RutinasSopa.verMatriz());
         }
         System.out.println(RutinasSopa.verMatriz());
         llenarMatrizRandom();
@@ -67,8 +76,9 @@ public class RutinasSopa {
         palabrasInitCheck = new int[palabrasConfig.length];
     }//fin seleccionarPalabras
 
-    static void insertarPalabra(String pPalabra, int pDireccion, int pOrientacion) {
+    static boolean insertarPalabra(String pPalabra, int pDireccion, int pOrientacion) {
         String palabra = pPalabra;
+        boolean insert;
 
         if (pDireccion == 1) {
             palabra = volverPalabra(pPalabra);
@@ -76,67 +86,98 @@ public class RutinasSopa {
 
         switch (pOrientacion) {
             case 0:
-                verificarInsertarHorizontal(palabra);
+                insert = verificarInsertarHorizontal(palabra);
                 break;
             case 1:
-                verificarInsertarVertical(palabra);
+                insert = verificarInsertarVertical(palabra);
                 break;
             case 2:
-                verificarInsertarDiagonalArriba(palabra);
+                insert = verificarInsertarDiagonalArriba(palabra);
                 break;
             case 3:
-                verificarInsertarDiagonalAbajo(palabra);
+                insert = verificarInsertarDiagonalAbajo(palabra);
                 break;
             default:
-                verificarInsertarHorizontal(palabra);
+                insert = verificarInsertarHorizontal(palabra);
                 break;
         }
+        return insert;
     }// fin insertarPalabra
 
-    private static void verificarInsertarHorizontal(String pPalabra) {
+    private static boolean verificarInsertarHorizontal(String pPalabra) {
 
         int fila = numeroRandom(0, LARGO_JUEGO - 1);
         int columna = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
-        while (!verificarEspacioHorizontal(pPalabra, fila, columna)) {
+        int counter = 0;
+        while (!verificarEspacioHorizontal(pPalabra, fila, columna) && counter < 13) {
             fila = numeroRandom(0, LARGO_JUEGO - 1);
             columna = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
+            counter++;
         }
-        insertarHorizontal(pPalabra, fila, columna);
+
+        if (counter > 12) {
+            return true;
+        } else {
+            insertarHorizontal(pPalabra, fila, columna);
+            return false;
+        }
 
     }
 
-    private static void verificarInsertarDiagonalArriba(String pPalabra) {
+    private static boolean verificarInsertarDiagonalArriba(String pPalabra) {
 
-        int fila = numeroRandom(LARGO_JUEGO - pPalabra.length(), LARGO_JUEGO - 1);
+        int fila = numeroRandom(pPalabra.length() - 1, LARGO_JUEGO - 1);
         int columna = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
-        while (!verificarEspacioDiagonalArriba(pPalabra, fila, columna)) {
-            fila = numeroRandom(LARGO_JUEGO - pPalabra.length(), LARGO_JUEGO - 1);
+        int counter = 0;
+        while (!verificarEspacioDiagonalArriba(pPalabra, fila, columna) && counter < 13) {
+            fila = numeroRandom(pPalabra.length() - 1, LARGO_JUEGO - 1);
             columna = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
+            counter++;   
         }
-        insertarDiagonalArriba(pPalabra, fila, columna);
+        if (counter > 12) {
+            return true;
+        } else {
+            insertarDiagonalArriba(pPalabra, fila, columna);
+            return false;
+        }
 
     }
 
-    private static void verificarInsertarDiagonalAbajo(String pPalabra) {
+    private static boolean verificarInsertarDiagonalAbajo(String pPalabra) {
 
         int fila = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
         int columna = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
-        while (!verificarEspacioDiagonalAbajo(pPalabra, fila, columna)) {
+        int counter = 0;
+        while (!verificarEspacioDiagonalAbajo(pPalabra, fila, columna) && counter < 13) {
             fila = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
             columna = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
+            counter++;
         }
-        insertarDiagonalAbajo(pPalabra, fila, columna);
+        if (counter > 12) {
+            return true;
+        } else {
+            insertarDiagonalAbajo(pPalabra, fila, columna);
+            return false;
+        }
 
     }
 
-    private static void verificarInsertarVertical(String pPalabra) {
+    private static boolean verificarInsertarVertical(String pPalabra) {
         int fila = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
         int columna = numeroRandom(0, LARGO_JUEGO - 1);
-        while (!verificarEspacioVertical(pPalabra, fila, columna)) {
+        int counter = 0;
+        while (!verificarEspacioVertical(pPalabra, fila, columna) && counter < 13) {
             fila = numeroRandom(0, LARGO_JUEGO - pPalabra.length());
             columna = numeroRandom(0, LARGO_JUEGO - 1);
+            counter++;
         }
-        insertarVertical(pPalabra, fila, columna);
+        if (counter > 12) {
+            return true;
+        } else {
+            insertarVertical(pPalabra, fila, columna);
+            return false;
+        }
+
     }
 
     private static boolean verificarEspacioHorizontal(String pPalabra, int pFila,
@@ -295,7 +336,7 @@ public class RutinasSopa {
                 resultado = 0;
                 break;
             case 2:
-               if (jugarVerificarEspacioDiagonalArriba(palabra, fila, columna)) {
+                if (jugarVerificarEspacioDiagonalArriba(palabra, fila, columna)) {
                     modificarPalabraDiagonalArriba(palabra, fila, columna);
                     resultado = 1;
                     break;
@@ -329,7 +370,7 @@ public class RutinasSopa {
                     pPalabra.charAt(i)).toUpperCase();
         }
     } //fin modificarPalabraHorizontal
-    
+
     private static void modificarPalabraDiagonalArriba(String pPalabra, int pFila,
             int pColumna) {
         for (int i = 0; i < pPalabra.length(); i++) {
@@ -337,7 +378,7 @@ public class RutinasSopa {
                     pPalabra.charAt(i)).toUpperCase();
         }
     } //fin modificarPalabraHorizontal
-    
+
     private static void modificarPalabraDiagonalAbajo(String pPalabra, int pFila,
             int pColumna) {
         for (int i = 0; i < pPalabra.length(); i++) {
@@ -367,7 +408,7 @@ public class RutinasSopa {
 
         return esCorrecta;
     }//fin jugarVerificarEspacioHorizontal
-    
+
     private static boolean jugarVerificarEspacioDiagonalArriba(String pPalabra, int pFila,
             int pColumna) {
         boolean esCorrecta = true;
@@ -381,13 +422,13 @@ public class RutinasSopa {
 
         return esCorrecta;
     }//fin jugarVerificarEspacioHorizontal
-    
+
     private static boolean jugarVerificarEspacioDiagonalAbajo(String pPalabra, int pFila,
             int pColumna) {
         boolean esCorrecta = true;
         for (int i = 0; i < pPalabra.length(); i++) {
             String letraMatriz = matrizJuego[pFila + i][pColumna + i];
-            String letraPalabra =  String.valueOf(pPalabra.charAt(i));
+            String letraPalabra = String.valueOf(pPalabra.charAt(i));
             if (!letraMatriz.equals(letraPalabra)) {
                 esCorrecta = false;
                 break;
