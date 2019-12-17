@@ -211,12 +211,9 @@ public class IUSopa {
         panelDireccion.add(noInvertida);
         panelDireccion.add(invertida);
 
-        
+        panelJuego.add(panelPalabra);
         panelJuego.add(panelOrientacion);
         panelJuego.add(panelDireccion);
-        panelJuego.add(panelPalabra);
-//        panelJuego.add(palabraAdivinarLabel);
-//        panelJuego.add(palabraAdivinar);
         panelJuego.add(buscarPalabra);
         dialogoJuegoInputs.setSize(300, 400);
         dialogoJuegoInputs.setContentPane(panelJuego);
