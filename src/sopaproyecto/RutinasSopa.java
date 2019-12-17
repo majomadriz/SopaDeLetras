@@ -335,7 +335,6 @@ public class RutinasSopa {
     }// fin iniciarJuego
 
     static int jugarVerificarPalabra(String pPalabra) {
-        try {
             String palabra = pPalabra;
             int palabraUsada = buscarEnArreglo(pPalabra);
             if (palabraUsada != -1) {
@@ -402,9 +401,6 @@ public class RutinasSopa {
                     break;
             }
             return resultado;
-        } catch (Exception e) {
-            return 0;
-        }
 
     } //fin jugarVerificarPalabra
 
@@ -444,6 +440,10 @@ public class RutinasSopa {
             int pColumna) {
         boolean esCorrecta = true;
         for (int i = 0; i < pPalabra.length(); i++) {
+            if ((pColumna + i) >= matrizJuego.length || (pColumna + i) < 0){
+                esCorrecta = false;
+                break;
+            }
             if (!matrizJuego[pFila][pColumna + i].toLowerCase().equals(
                     String.valueOf(pPalabra.charAt(i)))) {
                 esCorrecta = false;
@@ -458,6 +458,11 @@ public class RutinasSopa {
             int pColumna) {
         boolean esCorrecta = true;
         for (int i = 0; i < pPalabra.length(); i++) {
+            if ((pFila - i < 0) || (pFila - i >= matrizJuego.length)|| 
+                    (pColumna + i < 0) || (pColumna + i) >= matrizJuego.length){
+                esCorrecta = false;
+                break;
+            }
             if (!matrizJuego[pFila - i][pColumna + i].toLowerCase().equals(
                     String.valueOf(pPalabra.charAt(i)))) {
                 esCorrecta = false;
@@ -472,6 +477,11 @@ public class RutinasSopa {
             int pColumna) {
         boolean esCorrecta = true;
         for (int i = 0; i < pPalabra.length(); i++) {
+            if ((pFila + i) >= matrizJuego.length || (pFila + i) < 0
+                    || (pColumna + i) >= matrizJuego.length || (pColumna + i) < 0){
+                esCorrecta = false;
+                break;
+            }
             String letraMatriz = matrizJuego[pFila + i][pColumna + i].toLowerCase();
             String letraPalabra = String.valueOf(pPalabra.charAt(i));
             if (!letraMatriz.equals(letraPalabra)) {
@@ -487,6 +497,10 @@ public class RutinasSopa {
             int pColumna) {
         boolean esCorrecta = true;
         for (int i = 0; i < pPalabra.length(); i++) {
+            if ((pFila + i) >= matrizJuego.length || (pFila + i) < 0){
+                esCorrecta = false;
+                break;
+            }
             if (!matrizJuego[pFila + i][pColumna].toLowerCase().equals(
                     String.valueOf(pPalabra.charAt(i)))) {
                 esCorrecta = false;
