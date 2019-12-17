@@ -68,7 +68,7 @@ public class RutinasSopa {
     }// fin insertarPalabraConfig
 
     public static void inicializarJuego() {
-        matrizJuego = new String[LARGO_JUEGO][LARGO_JUEGO];
+        iniciarJuego();
         seleccionarPalabras();
         limpiarMatriz();
         for (int i = 0; i < palabrasSelec.length; i++) {
@@ -329,77 +329,83 @@ public class RutinasSopa {
     }//fin llenarMatrizRandom
 
     static void iniciarJuego() {
+        matrizJuego = new String[LARGO_JUEGO][LARGO_JUEGO];
         palabrasEncontradas = new String[PALABRAS_JUEGO_MAX];
         palabrasEncontradasCont = 0;
     }// fin iniciarJuego
 
     static int jugarVerificarPalabra(String pPalabra) {
-        String palabra = pPalabra;
-        int palabraUsada = buscarEnArreglo(pPalabra);
-        if (palabraUsada != -1) {
-            return -1;
+        try {
+            String palabra = pPalabra;
+            int palabraUsada = buscarEnArreglo(pPalabra);
+            if (palabraUsada != -1) {
+                return -1;
+            }
+
+            if (esInvertida) {
+                palabra = volverPalabra(pPalabra);
+            }
+
+            int resultado = 0;
+            switch (orientacion) {
+                case "horizontal":
+                    if (esInvertida) {
+                        columna = columna - pPalabra.length() + 1;
+                    }
+                    if (jugarVerificarEspacioHorizontal(palabra, fila, columna)) {
+                        modificarPalabraHorizontal(palabra, fila, columna);
+                        resultado = 1;
+                        break;
+                    }
+                    break;
+                case "vertical":
+                    if (esInvertida) {
+                        fila = fila - pPalabra.length() + 1;
+                    }
+                    if (jugarVerificarEspacioVertical(palabra, fila, columna)) {
+                        modificarPalabraVertical(palabra, fila, columna);
+                        resultado = 1;
+                        break;
+                    }
+                    break;
+                case "diagonal_arriba":
+                    if (esInvertida) {
+                        fila = fila + pPalabra.length() - 1;
+                        columna = columna - pPalabra.length() + 1;
+                    }
+                    if (jugarVerificarEspacioDiagonalArriba(palabra, fila, columna)) {
+                        modificarPalabraDiagonalArriba(palabra, fila, columna);
+                        resultado = 1;
+                        break;
+                    }
+                    break;
+                case "diagonal_abajo":
+                    if (esInvertida) {
+                        fila = fila - pPalabra.length() + 1;
+                        columna = columna - pPalabra.length() + 1;
+                    }
+                    if (jugarVerificarEspacioDiagonalAbajo(palabra, fila, columna)) {
+                        modificarPalabraDiagonalAbajo(palabra, fila, columna);
+                        resultado = 1;
+                        break;
+                    }
+                    break;
+                default:
+                    if (esInvertida) {
+                        columna = columna - pPalabra.length() + 1;
+                    }
+                    if (jugarVerificarEspacioHorizontal(palabra, fila, columna)) {
+                        modificarPalabraHorizontal(palabra, fila, columna);
+                        resultado = 1;
+                        break;
+                    }
+                    break;
+            }
+            return resultado;
+        } catch (Exception e) {
+            return 0;
         }
 
-        if (esInvertida) {
-            palabra = volverPalabra(pPalabra);
-        }
-
-        int resultado = 0;
-        switch (orientacion) {
-            case "horizontal":
-                if (esInvertida) {
-                    columna = columna - pPalabra.length() + 1;
-                }
-                if (jugarVerificarEspacioHorizontal(palabra, fila, columna)) {
-                    modificarPalabraHorizontal(palabra, fila, columna);
-                    resultado = 1;
-                    break;
-                }
-                break;
-            case "vertical":
-                if (esInvertida) {
-                    fila = fila - pPalabra.length() + 1;
-                }
-                if (jugarVerificarEspacioVertical(palabra, fila, columna)) {
-                    modificarPalabraVertical(palabra, fila, columna);
-                    resultado = 1;
-                    break;
-                }
-                break;
-            case "diagonal_arriba":
-                if (esInvertida) {
-                    fila = fila + pPalabra.length() -1 ;
-                    columna = columna - pPalabra.length() +1;
-                }
-                if (jugarVerificarEspacioDiagonalArriba(palabra, fila, columna)) {
-                    modificarPalabraDiagonalArriba(palabra, fila, columna);
-                    resultado = 1;
-                    break;
-                }
-                break;
-            case "diagonal_abajo":
-                if (esInvertida) {
-                    fila = fila - pPalabra.length() + 1;
-                    columna = columna - pPalabra.length() + 1;
-                }
-                if (jugarVerificarEspacioDiagonalAbajo(palabra, fila, columna)) {
-                    modificarPalabraDiagonalAbajo(palabra, fila, columna);
-                    resultado = 1;
-                    break;
-                }
-                break;
-            default:
-                if (esInvertida) {
-                    columna = columna - pPalabra.length() + 1;
-                }
-                if (jugarVerificarEspacioHorizontal(palabra, fila, columna)) {
-                    modificarPalabraHorizontal(palabra, fila, columna);
-                    resultado = 1;
-                    break;
-                }
-                break;
-        }
-        return resultado;
     } //fin jugarVerificarPalabra
 
     private static void modificarPalabraHorizontal(String pPalabra, int pFila,

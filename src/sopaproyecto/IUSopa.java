@@ -392,6 +392,7 @@ public class IUSopa {
                         updateSopa();
                         boolean ganado = RutinasSopa.verificarJuegoGanado();
                         if (ganado) {
+                            
                             mostrarDialogoMensaje("Haz ganado la partida", "cerrar_juego_ganado");
                             break;
                         }
