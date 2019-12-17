@@ -79,7 +79,7 @@ public class RutinasSopa {
             }
 
         }
-        System.out.println(RutinasSopa.verMatriz());
+        System.out.println(verMatriz());
         llenarMatrizRandom();
     }// fin inicializarJuego
 
@@ -344,17 +344,11 @@ public class RutinasSopa {
             palabra = volverPalabra(pPalabra);
         }
 
-        System.out.println(orientacion);
-        System.out.println(fila);
-        System.out.println(columna);
-        System.out.println(esInvertida);
-
         int resultado = 0;
         switch (orientacion) {
             case "horizontal":
                 if (esInvertida) {
                     columna = columna - pPalabra.length() + 1;
-                    System.out.println(fila);
                 }
                 if (jugarVerificarEspacioHorizontal(palabra, fila, columna)) {
                     modificarPalabraHorizontal(palabra, fila, columna);
@@ -366,7 +360,6 @@ public class RutinasSopa {
                 if (esInvertida) {
                     fila = fila - pPalabra.length() + 1;
                 }
-                System.out.println(fila);
                 if (jugarVerificarEspacioVertical(palabra, fila, columna)) {
                     modificarPalabraVertical(palabra, fila, columna);
                     resultado = 1;
@@ -378,8 +371,6 @@ public class RutinasSopa {
                     fila = fila + pPalabra.length() -1 ;
                     columna = columna - pPalabra.length() +1;
                 }
-                System.out.println(fila);
-                System.out.println(columna);
                 if (jugarVerificarEspacioDiagonalArriba(palabra, fila, columna)) {
                     modificarPalabraDiagonalArriba(palabra, fila, columna);
                     resultado = 1;
@@ -391,8 +382,6 @@ public class RutinasSopa {
                     fila = fila - pPalabra.length() + 1;
                     columna = columna - pPalabra.length() + 1;
                 }
-                System.out.println(fila);
-                System.out.println(columna);
                 if (jugarVerificarEspacioDiagonalAbajo(palabra, fila, columna)) {
                     modificarPalabraDiagonalAbajo(palabra, fila, columna);
                     resultado = 1;
@@ -449,7 +438,7 @@ public class RutinasSopa {
             int pColumna) {
         boolean esCorrecta = true;
         for (int i = 0; i < pPalabra.length(); i++) {
-            if (!matrizJuego[pFila][pColumna + i].equals(
+            if (!matrizJuego[pFila][pColumna + i].toLowerCase().equals(
                     String.valueOf(pPalabra.charAt(i)))) {
                 esCorrecta = false;
                 break;
@@ -463,9 +452,7 @@ public class RutinasSopa {
             int pColumna) {
         boolean esCorrecta = true;
         for (int i = 0; i < pPalabra.length(); i++) {
-            System.out.println(matrizJuego[pFila][pColumna + i]);
-            System.out.println(String.valueOf(pPalabra.charAt(i)));
-            if (!matrizJuego[pFila - i][pColumna + i].equals(
+            if (!matrizJuego[pFila - i][pColumna + i].toLowerCase().equals(
                     String.valueOf(pPalabra.charAt(i)))) {
                 esCorrecta = false;
                 break;
@@ -479,9 +466,7 @@ public class RutinasSopa {
             int pColumna) {
         boolean esCorrecta = true;
         for (int i = 0; i < pPalabra.length(); i++) {
-            System.out.println(matrizJuego[pFila][pColumna + i]);
-            System.out.println(String.valueOf(pPalabra.charAt(i)));
-            String letraMatriz = matrizJuego[pFila + i][pColumna + i];
+            String letraMatriz = matrizJuego[pFila + i][pColumna + i].toLowerCase();
             String letraPalabra = String.valueOf(pPalabra.charAt(i));
             if (!letraMatriz.equals(letraPalabra)) {
                 esCorrecta = false;
@@ -496,7 +481,7 @@ public class RutinasSopa {
             int pColumna) {
         boolean esCorrecta = true;
         for (int i = 0; i < pPalabra.length(); i++) {
-            if (!matrizJuego[pFila + i][pColumna].equals(
+            if (!matrizJuego[pFila + i][pColumna].toLowerCase().equals(
                     String.valueOf(pPalabra.charAt(i)))) {
                 esCorrecta = false;
                 break;

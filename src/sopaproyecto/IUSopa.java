@@ -11,11 +11,13 @@ import static java.awt.Component.CENTER_ALIGNMENT;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
+import javax.swing.border.EmptyBorder;
 
 public class IUSopa {
 
     public static JFrame frame = new JFrame("Sopa de letras");
-    public static JDialog jugarInputs = new JDialog();
+    public static JDialog dialogoJuegoInputs = new JDialog();
+    public static JDialog dialogoMensajes = new JDialog();
 
     private static Color color;
     public static JTextField palabraConfigurar = new JTextField(12);
@@ -24,13 +26,33 @@ public class IUSopa {
     public static JTextField columnaAdivinar = new JTextField(2);
 
     public static void main(String[] args) {
+        RutinasSopa.inicializarJuego();
         mostrarMenu();
 
     }//Fin del main
 
+    public static void mostrarDialogoMensaje(String message, String id) {
+        dialogoMensajes.dispose();
+        dialogoMensajes = new JDialog();
+        JPanel panelMensaje = new JPanel();
+        panelMensaje.setLayout(new FlowLayout());
+        JLabel mensajeLabel = new JLabel(message);
+        JButton button = new JButton("Aceptar");
+        button.addActionListener(menuActionListener);
+        button.setActionCommand(id);
+        panelMensaje.add(mensajeLabel);
+        panelMensaje.add(button);
+        dialogoMensajes.add(panelMensaje);
+        dialogoMensajes.pack();
+        dialogoMensajes.setLocationRelativeTo(null);
+        dialogoMensajes.setVisible(true);
+    }
+
     //Inicio  mostrar menu
     public static void mostrarMenu() {
-
+        dialogoMensajes.dispose();
+        dialogoJuegoInputs.dispose();
+        
         JPanel panelMenu = new JPanel();
         panelMenu.setLayout(new BoxLayout(panelMenu, BoxLayout.Y_AXIS));
 
@@ -105,24 +127,25 @@ public class IUSopa {
         RutinasSopa.resetPalabraConfigIndex();
     }//Fin configurarJuego
 
-    public static void jugarUI() {
-
+    public static void mostrarJuegoInputs() {
         JPanel panelJuego = new JPanel();
-        panelJuego.setLayout(new FlowLayout());
-
-        updateSopa();
+        panelJuego.setLayout(new BoxLayout(panelJuego, BoxLayout.Y_AXIS));
 
         JPanel panelPalabra = new JPanel();
-        panelPalabra.setLayout(new FlowLayout());
+        panelPalabra.setLayout(new BoxLayout(panelPalabra, BoxLayout.Y_AXIS));
+        panelPalabra.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         JPanel panelOrientacion = new JPanel();
         panelOrientacion.setLayout(new BoxLayout(panelOrientacion, BoxLayout.Y_AXIS));
+        panelOrientacion.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         JPanel panelDireccion = new JPanel();
         panelDireccion.setLayout(new BoxLayout(panelDireccion, BoxLayout.Y_AXIS));
+        panelDireccion.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         JLabel palabraAdivinarLabel = new JLabel("Ingrese la palabra:");
-        palabraAdivinar.setHorizontalAlignment(JTextField.LEFT);
+//        palabraAdivinar.setHorizontalAlignment(JTextField.LEFT);
+        palabraAdivinar.setMaximumSize( palabraAdivinar.getPreferredSize() );
         palabraAdivinar.addKeyListener(keyListener);
 
         JLabel orientacionLabel = new JLabel("Seleccione la orientacion:");
@@ -171,10 +194,9 @@ public class IUSopa {
         direccionRadio.add(noInvertida);
         direccionRadio.add(invertida);
 
-        JButton agregarBtn = new JButton("Agregar Palabra");
-        agregarBtn.addActionListener(jugarActionListener);
-        agregarBtn.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        agregarBtn.setActionCommand("adivinar_palabra");
+        JButton buscarPalabra = new JButton("Buscar Palabra");
+        buscarPalabra.addActionListener(jugarActionListener);
+        buscarPalabra.setActionCommand("adivinar_palabra");
 
         panelPalabra.add(palabraAdivinarLabel);
         panelPalabra.add(palabraAdivinar);
@@ -189,19 +211,21 @@ public class IUSopa {
         panelDireccion.add(noInvertida);
         panelDireccion.add(invertida);
 
-        panelJuego.add(panelPalabra);
+        
         panelJuego.add(panelOrientacion);
         panelJuego.add(panelDireccion);
-        panelJuego.add(agregarBtn);
-
-        jugarInputs.setSize(700, 600);
-        jugarInputs.setContentPane(panelJuego);
+        panelJuego.add(panelPalabra);
+//        panelJuego.add(palabraAdivinarLabel);
+//        panelJuego.add(palabraAdivinar);
+        panelJuego.add(buscarPalabra);
+        dialogoJuegoInputs.setSize(300, 400);
+        dialogoJuegoInputs.setContentPane(panelJuego);
+        palabraAdivinar.requestFocus();
 
     }//Fin configurarJuego
 
     public static void updateSopa() {
         String[][] matrizJuego = RutinasSopa.getMatrizJuego();
-        System.out.println(RutinasSopa.verMatriz());
         JPanel panelPrincipal = new JPanel(new BorderLayout());
         JPanel panelSopa = new JPanel(new GridLayout(12, 12));
         panelSopa.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -211,14 +235,20 @@ public class IUSopa {
 
         for (int j = 0; j < matrizJuego.length; j++) {
             for (int i = 0; i < matrizJuego[j].length; i++) {
-                JLabel letra = new JLabel(matrizJuego[j][i], javax.swing.SwingConstants.CENTER);
-                letra.addMouseListener(mouseListener);
-                letra.setAlignmentX(CENTER_ALIGNMENT);
-                letra.setAlignmentY(CENTER_ALIGNMENT);
-                letra.setFont(new Font("Arial", Font.PLAIN, 18));
-                letra.setName(j + "-" + i);
-                letra.setOpaque(true);
-                panelSopa.add(letra);
+                String letra = matrizJuego[j][i];
+                String letraMay = letra.toUpperCase();
+                
+                JLabel letraLabel = new JLabel(letra, javax.swing.SwingConstants.CENTER);
+                letraLabel.addMouseListener(mouseListener);
+                letraLabel.setAlignmentX(CENTER_ALIGNMENT);
+                letraLabel.setAlignmentY(CENTER_ALIGNMENT);
+                letraLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                letraLabel.setName(j + "-" + i);
+                if(letra.equals(letraMay)){
+                    letraLabel.setBackground(Color.GREEN);
+                }
+                letraLabel.setOpaque(true);
+                panelSopa.add(letraLabel);
             }
         }
 
@@ -240,11 +270,6 @@ public class IUSopa {
             // printIt("Typed", keyEvent);
         }
 
-        // private void printIt(String title, KeyEvent keyEvent) {
-        // int keyCode = keyEvent.getKeyCode();
-        // String keyText = KeyEvent.getKeyText(keyCode);
-        // System.out.println(title + " : " + keyText + " / " + keyEvent.getKeyChar());
-        // }
     };
 
     public static MouseListener mouseListener = new MouseListener() {
@@ -279,7 +304,8 @@ public class IUSopa {
             columna = Integer.parseInt(label.getName().substring(divisor + 1));
             RutinasSopa.setColumna(columna);
             RutinasSopa.setFila(fila);
-            jugarInputs.setVisible(true);
+            dialogoJuegoInputs.setVisible(true);
+            palabraAdivinar.requestFocus();
         }
     };
 
@@ -290,22 +316,30 @@ public class IUSopa {
             String expression = e.getActionCommand();
             switch (expression) {
                 case "configurar_juego":
-                    System.out.println("configurar_juego");
                     configurarJuego();
                     break;
                 case "inicializar_juego":
-                    System.out.println("inicializar_juego");
                     RutinasSopa.inicializarJuego();
+                    mostrarDialogoMensaje("Juego Inicializado!","cerrar_mensaje");
                     break;
                 case "jugar":
-                    System.out.println("jugar");
-                    jugarUI();
+                    updateSopa();
+                    mostrarJuegoInputs();
+                    break;
+                case "cerrar_mensaje":
+                    dialogoMensajes.dispose();
+                    break;
+                case "cerrar_juego_ganado":
+                    RutinasSopa.inicializarJuego();
+                    dialogoMensajes.dispose();
+                    mostrarMenu();
                     break;
                 case "salir":
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("oopss");
+                    mostrarDialogoMensaje("Hubo un error","cerrar_mensaje");
+                    mostrarMenu();
                     break;
             }
         }
@@ -318,21 +352,21 @@ public class IUSopa {
             String expression = e.getActionCommand();
             switch (expression) {
                 case "agregar_palabra":
-                    System.out.println("agregar_palabra");
                     String ePalabra = palabraConfigurar.getText();
                     if (ePalabra.length() > 12 || ePalabra.length() < 3) {
-                        System.out.println(
-                                "La palabra no puede tener mas de 12 letras ni menos de 2");
+                        mostrarDialogoMensaje("La palabra no puede tener mas de 12 letras ni menos de 2","cerrar_mensaje");
                     } else {
                         palabraConfigurar.setText("");
                         palabraConfigurar.requestFocus();
                         if (RutinasSopa.insertarPalabraConfig(ePalabra)) {
                             mostrarMenu();
+                            mostrarDialogoMensaje("Juego Configurado!","cerrar_mensaje");
                         }
                     }
                     break;
                 default:
-                    System.out.println("oopss");
+                    mostrarDialogoMensaje("Hubo un error","cerrar_mensaje");
+                    mostrarMenu();
                     break;
             }
         }
@@ -346,49 +380,53 @@ public class IUSopa {
             switch (expression) {
                 case "adivinar_palabra":
                     String palabra = palabraAdivinar.getText();
-                    jugarInputs.dispose();
+                    palabraAdivinar.setText("");
+                    dialogoJuegoInputs.dispose();
                     int result = RutinasSopa.jugarVerificarPalabra(palabra);
-                    
+
+                    if (result == 0) {
+                        mostrarDialogoMensaje("La palabra es incorrecta", "cerrar_mensaje");
+                    }
+                    if (result == -1) {
+                        mostrarDialogoMensaje("La palabra ya fue agregada", "cerrar_mensaje");
+                    }
                     if (result == 1) {
-                        System.out.println("correcto");
+                        RutinasSopa.agregarPalabraCorrecta(palabra);
                         updateSopa();
+                        boolean ganado = RutinasSopa.verificarJuegoGanado();
+                        if (ganado) {
+                            mostrarDialogoMensaje("Haz ganado la partida", "cerrar_juego_ganado");
+                            break;
+                        }
+                        mostrarDialogoMensaje("La palabra es correcta!", "cerrar_mensaje");
+
                     }
-                    
-                    boolean ganado = RutinasSopa.verificarJuegoGanado();
-                    
-                    if(ganado){
-                    }
+
                     break;
                 case "horizontal":
                     RutinasSopa.setOrientacion("horizontal");
-                    System.out.println("horizontal");
                     break;
                 case "vertical":
-                    System.out.println("vertical");
                     RutinasSopa.setOrientacion("vertical");
                     break;
                 case "diagonal_arriba":
-                    System.out.println("diagonal_arriba");
                     RutinasSopa.setOrientacion("diagonal_arriba");
                     break;
                 case "diagonal_abajo":
-                    System.out.println("diagonal_abajo");
                     RutinasSopa.setOrientacion("diagonal_abajo");
                     break;
                 case "invertida":
-                    System.out.println("invertida");
                     RutinasSopa.setEsInvertida(true);
                     break;
                 case "no_invertida":
-                    System.out.println("no_invertida");
                     RutinasSopa.setEsInvertida(false);
                     break;
                 default:
-                    System.out.println("oopss");
+                    mostrarDialogoMensaje("Hubo un error!", "cerrar_mensaje");
+                    mostrarMenu();
                     break;
             }
         }
     };
-
 
 }//Fin de class
